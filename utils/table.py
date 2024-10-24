@@ -30,9 +30,9 @@ class Table:
     def __init__(self,capacity: int, seats: List[Seat]): #Todo: create fall-back if len(seats) > capacity
         self.capacity = capacity
         self.seats = seats
-        
     def __str__(self):
-        return f"A Table object with a capacity of {self.capacity}, and with the following members: {', '.join([seat.occupant for seat in self.seats])}"
+        message = f"and with the following members: {', '.join([seat.occupant for seat in self.seats])}\n" if len(self.seats) else "empty at the moment\n"
+        return f"A Table object with a capacity of {self.capacity}, {message}"
 
     def has_free_spot(self) -> bool:
         return self.letf_capacity() > 0
