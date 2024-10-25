@@ -20,6 +20,11 @@ class Openspace:
                     assigned_student = names[table_nb + seat_nb]
                     table.assign_seat(assigned_student)
     
-
+    def store(self, file_name: str):
+        tables_disposition = [[student.occupant for student in table.seats] for table in self.tables ]
+        table_names = [f"Table {i + 1}" for i,table in enumerate(self.tables)]
+        tables_df = pd.DataFrame(tables_disposition).T
+        tables_df.columns = table_names
+        tables_df.to_csv(file_name)
 
 
