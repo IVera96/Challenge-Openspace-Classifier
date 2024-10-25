@@ -60,7 +60,12 @@ It provides functionality for shuffling names, assigning seats, and displaying t
         self.room_disposition.to_csv(file_name)
 
     def display(self):
-        print(self.room_disposition)
+        print('Open Space Table Assignments:')
+        for i, table in enumerate(self.tables, 1):
+            print(f'Table {i} with his occupants:')
+            occupants = [seat.occupant for seat in table.seats if seat.occupant]
+            print(','.join(occupants) if occupants else 'No occupants', end=' ')
+            print() 
 
     def get_unseated(self, total_people: int):
         openspace_count = self.room_disposition.count()

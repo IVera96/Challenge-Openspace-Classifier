@@ -50,3 +50,19 @@ print(len(students_list[24:33]))
 open_space.organize(students_list[24:33],extra_tables)
 open_space.display()
 
+
+def possybility_to_ask(openspace):
+    count_name=0
+    count_seat=0
+    a=int(input('What do you whant to know? \n 1.how much seats are in the room,\n 2.how much people are in the room, \n 3.how much seats are left:\n Insert the number of the question:'))
+    
+    if a==1:
+        for table in openspace.tables:
+            count_seat+=len(table.seats)
+        print(f'There are {count_seat} seats in the room')
+    elif a==2:
+        for name in range(len(students_list)):
+            count_name+=1
+        print(f'In the room there are {count_name} personne')
+    elif a==3:
+        print(open_space.get_unseated(len(students_list)))

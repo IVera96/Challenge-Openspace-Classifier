@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenSpace Seating Organizer - Challenge</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button, select, input[type="file"] {
+      margin-top: 10px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Challenge - OpenSpace Classifier</h1>
+<h2>Project for BeCode</h2>
+<h3>Team: Edoardo and Vera</h3>
+
+<p>
+  The OpenSpace Seating Organizer is a Python-based tool designed to help manage seating arrangements in an open space environment. The tool allows users to organize people into tables, check seating availability, and store the current seating arrangement in a CSV file for easy reference. This project leverages Python’s object-oriented programming to represent tables, seats, and occupant assignments efficiently.
+</p>
+
+<div class="container">
+  <h2>OpenSpace Seating Organizer</h2>
+  
+  <!-- File Upload -->
+  <label for="file-upload">Upload Excel File:</label>
+  <input type="file" id="file-upload" accept=".csv" />
+  
+  <!-- Feature Selection -->
+  <label for="feature-select">Select a Feature:</label>
+  <select id="feature-select">
+    <option value="display">Display Seating Arrangement</option>
+    <option value="store">Store Seating Arrangement as CSV</option>
+    <option value="possibility">Show Seat and Occupant Info</option>
+  </select>
+  
+  <!-- Execute Button -->
+  <button onclick="executeFeature()">Execute Feature</button>
+  
+  <!-- Results Display -->
+  <div id="result" style="margin-top: 20px; font-weight: bold;"></div>
+</div>
+
+<script>
+  // Function to handle feature execution
+  async function executeFeature() {
+    const fileInput = document.getElementById('file-upload');
+    const feature = document.getElementById('feature-select').value;
+    const resultDiv = document.getElementById('result');
+    
+    // Check if a file is uploaded
+    if (!fileInput.files.length) {
+      resultDiv.innerHTML = "Please upload an Excel file first.";
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+    formData.append('feature', feature);
+
+    // Send the file and feature to the server
+    const response = await fetch('/execute', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const result = await response.text();
+    resultDiv.innerHTML = result;
+  }
+</script>
+
+</body>
+</html>
