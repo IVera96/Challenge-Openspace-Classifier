@@ -1,5 +1,5 @@
-from .table import Table
-from typing import List
+from .table import Table,Seat
+from typing import List,Dict
 from random import shuffle
 import pandas as pd
 
@@ -22,33 +22,55 @@ It provides functionality for shuffling names, assigning seats, and displaying t
         display(): Displays the occupants of each table in a readable format.
      """
     def __init__(self, tables: List[Table], number_of_tables: int):
-        self.tables = tables
         self.number_of_tables = number_of_tables
+        self.tables = tables
+        self.room_disposition = None  
+        self.unsetead = []
+
     def __str__(self):
-        return f"A open space object with the following tables disposition:\n{' '.join([table.__str__() for table in self.tables])}"  #todo complete description
-    
-    def organize(self, names: List[str]):
+        return f"A open space object with the following tables disposition:\n{' '.join([table.__str__() for table in self.tables])}"
+
+    def organize(self, names: List[str], tables: List[Table]):
         shuffle(names)
-        count=0
-        for table_nb,table in enumerate(self.tables):
+        student_counter = 0
+        for table in tables:
             for seat_nb in range(table.capacity):
                 if table.has_free_spot():
-                    assigned_student = names[count]
+                    assigned_student = names[student_counter]
                     table.assign_seat(assigned_student)
-                    count+=1
-        tables_disposition = [[student.occupant for student in table.seats] for table in self.tables ]
+                    student_counter += 1
+        
+        if not self.tables:
+            self.tables = tables
+        else:
+            self.tables.extend(tables)
+
+        # Prepare table disposition for new tables
+        tables_disposition = [[student.occupant for student in table.seats] for table in self.tables]
         table_names = [f"Table {i + 1}" for i in range(len(self.tables))]
         tables_df = pd.DataFrame(tables_disposition).T
         tables_df.columns = table_names
-        self.room_disposition = tables_df
+
+        if self.room_disposition is None:
+            self.room_disposition = tables_df
+        else:
+            self.room_disposition = pd.concat([self.room_disposition, tables_df], axis=1)
     
     def store(self, file_name: str):
         self.room_disposition.to_csv(file_name)
 
     def display(self):
-        print('Open Space Table Assignments:')
-        for i, table in enumerate(self.tables, 1):
-            print(f'Table {i} with his occupants:')
-            occupants = [seat.occupant for seat in table.seats if seat.occupant]
-            print(','.join(occupants) if occupants else 'No occupants', end=' ')
-            print() 
+        print(self.room_disposition)
+
+    def get_unseated(self, total_people: int):
+        openspace_count = self.room_disposition.count()
+        return total_people - sum(openspace_count)
+
+
+        
+
+                
+
+
+
+
